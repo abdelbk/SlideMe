@@ -62,12 +62,7 @@ SlideMe = (function() {
 		this.prevValue    = this.currentValue;
 		this.currentValue = this.getHandleValue(left, this.config.decimalPlace);
 		if(this.currentValue != this.prevValue) {
-			this.handle.style.left = left + 'px';
-		}
-		if(e.clientX <= this.slider.offsetLeft) {
-			this.handle.style.left = 0 + 'px'; 
-		} else if(e.clientX >= (this.slider.offsetLeft + this.slider.offsetWidth)) {
-			this.handle.style.left = (this.slider.offsetWidth - this.handle.offsetWidth) + 'px';
+			this.setHandlePosition(this.currentValue);
 		}
 	}
 
