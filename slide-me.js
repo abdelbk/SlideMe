@@ -81,14 +81,13 @@ SlideMe = (function() {
 	SlideMe.prototype.getHandleValue = function(position, decimalPlace) {
 		var percent = position / (this.slider.offsetWidth - this.handle.offsetWidth),
 		    value   = percent * (this.config.values.max - this.config.values.min) + this.config.values.min;
-		if (decimalPlace > 0) {
-			value = Math.floor(value * (10 * decimalPlace)) / (10 * decimalPlace);
-		} else {
-			value = Math.floor(value);
-		}
+		
+		value = Math.floor(value * Math.pow(10, decimalPlace)) / Math.pow(10, decimalPlace);
 		if(value < this.config.values.min) value = this.config.values.min;
 		if(value > this.config.values.max) value = this.config.values.max;
+		
 		return value;
 	}
+
 	return SlideMe;
 })();
