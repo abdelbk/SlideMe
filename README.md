@@ -24,7 +24,7 @@ var slider = new SlideMe('elementId', {
       decimalPlace : 2
 });
 ```
-###Some Css is required
+###Some CSS is required
 To make the plugin work, you should target the slider with some basic CSS.
 Just make the handle a child element of the slider, and position it in absolute relatively to its parent.
 
