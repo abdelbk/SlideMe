@@ -42,11 +42,8 @@ SlideMe = (function() {
 		var me = this;
 		me.handle.addEventListener('mousedown', function(e) {
 			e.preventDefault();
-			var coord  = me.horizontal ? 'clientX' : 'clientY',
-			    offset = me.horizontal ? 'offsetLeft' : 'offsetTop';
-			
 			me.dragging = true;
-			me.position = e[coord] - me.handle[offset];
+			me.position = e[me.units.coord] - me.handle[me.units.offsetPos];
 		}, false);
 
 		document.addEventListener('mousemove', function(e) {
@@ -64,16 +61,25 @@ SlideMe = (function() {
 
 	SlideMe.prototype.getHandleDirection = function() {
 		if(this.config.horizontal || this.handle.offsetWidth < this.slider.offsetWidth) {
-			this.horizontal = true;
+			this.units = {
+				coord : 'clientX',
+				offsetPos : 'offsetLeft',
+				offsetDim : 'offsetWidth',
+				offsetStyle : 'left'
+			}
 		} else {
-			this.horizontal = false;
+			this.units = {
+				coord : 'clientY',
+				offsetPos : 'offsetTop',
+				offsetDim : 'offsetHeight',
+				offsetStyle : 'top'
+			}
 		}
 
 	}
 
 	SlideMe.prototype.changeHandlePosition = function(e) {
-		var coord    = this.horizontal ? 'clientX' : 'clientY',
-	            position = e[coord] - this.position;
+		var position = e[this.units.coord] - this.position;
 		
 		this.prevValue    = this.currentValue;
 		this.currentValue = this.getHandleValue(position, this.config.decimalPlace);
@@ -84,17 +90,14 @@ SlideMe = (function() {
 
 	SlideMe.prototype.setHandlePosition = function(value) {
 		var percent     = (value - this.config.values.min) / (this.config.values.max - this.config.values.min),
-	  	    offset      = this.horizontal ? 'offsetWidth' : 'offsetHeight',
-		    styleOffset = this.horizontal ? 'left' : 'top',
-		    position    = (this.slider[offset] - this.handle[offset]) * percent;
+		    position    = (this.slider[this.units.offsetDim] - this.handle[this.units.offsetDim]) * percent;
 		
-		this.handle.style[styleOffset] = position + 'px';	
+		this.handle.style[this.units.offsetStyle] = position + 'px';	
 		return position;
 	}
 
 	SlideMe.prototype.getHandleValue = function(position, decimalPlace) {
-		var offset  = this.horizontal ? 'offsetWidth' : 'offsetHeight',
-		    percent = position / (this.slider[offset] - this.handle[offset]),
+		var percent = position / (this.slider[this.units.offsetDim] - this.handle[this.units.offsetDim]),
 		    value   = percent * (this.config.values.max - this.config.values.min) + this.config.values.min;
 		
 		value = Math.floor(value * Math.pow(10, decimalPlace)) / Math.pow(10, decimalPlace);
