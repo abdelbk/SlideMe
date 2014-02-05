@@ -24,6 +24,7 @@ SlideMe = (function() {
 				min : 0,
 				max : 10
 			},
+			horizontal : true,
 			decimalPlace : 0
 		};
 
@@ -32,6 +33,7 @@ SlideMe = (function() {
 		this.slider       = document.getElementById(slider);
 		this.handle       = this.slider.firstElementChild;
 		this.currentValue = this.config.values.value;
+		this.getHandleDirection();
 		this.setHandlePosition(this.config.values.value);
 		this.addMouseHandlers();
 	}
@@ -40,8 +42,11 @@ SlideMe = (function() {
 		var me = this;
 		me.handle.addEventListener('mousedown', function(e) {
 			e.preventDefault();
+			var coord  = me.horizontal ? 'clientX' : 'clientY',
+				offset = me.horizontal ? 'offsetLeft' : 'offsetTop';
+			
 			me.dragging = true;
-			me.position = e.clientX - me.handle.offsetLeft;
+			me.position = e[coord] - me.handle[offset];
 		}, false);
 
 		document.addEventListener('mousemove', function(e) {
@@ -57,24 +62,39 @@ SlideMe = (function() {
 		}, false);
 	}
 
+	SlideMe.prototype.getHandleDirection = function() {
+		if(this.config.horizontal || this.handle.offsetWidth < this.slider.offsetWidth) {
+			this.horizontal = true;
+		} else {
+			this.horizontal = false;
+		}
+
+	}
+
 	SlideMe.prototype.changeHandlePosition = function(e) {
-		var left = e.clientX - this.position;
+		var coord    = this.horizontal ? 'clientX' : 'clientY',
+			position = e[coord] - this.position;
+		
 		this.prevValue    = this.currentValue;
-		this.currentValue = this.getHandleValue(left, this.config.decimalPlace);
+		this.currentValue = this.getHandleValue(position, this.config.decimalPlace);
 		if(this.currentValue != this.prevValue) {
 			this.setHandlePosition(this.currentValue);
 		}
 	}
 
 	SlideMe.prototype.setHandlePosition = function(value) {
-		var percent  = (value - this.config.values.min) / (this.config.values.max - this.config.values.min);
-		    position = (this.slider.offsetWidth - this.handle.offsetWidth) * percent;
-		this.handle.style.left = position + 'px';	
+		var percent     = (value - this.config.values.min) / (this.config.values.max - this.config.values.min),
+			offset      = this.horizontal ? 'offsetWidth' : 'offsetHeight',
+			styleOffset = this.horizontal ? 'left' : 'top',
+		    position    = (this.slider[offset] - this.handle[offset]) * percent;
+		
+		this.handle.style[styleOffset] = position + 'px';	
 		return position;
 	}
 
 	SlideMe.prototype.getHandleValue = function(position, decimalPlace) {
-		var percent = position / (this.slider.offsetWidth - this.handle.offsetWidth),
+		var offset  = this.horizontal ? 'offsetWidth' : 'offsetHeight',
+			percent = position / (this.slider[offset] - this.handle[offset]),
 		    value   = percent * (this.config.values.max - this.config.values.min) + this.config.values.min;
 		
 		value = Math.floor(value * Math.pow(10, decimalPlace)) / Math.pow(10, decimalPlace);
