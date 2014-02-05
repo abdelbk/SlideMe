@@ -10,7 +10,8 @@ var slider = new SlideMe('elementId', options);
 ```
 The options are the following :
  - a `values` object literal which contains the : `min`, `max` and the default `value`.
- - a `decimalPlace` which defines how many numbers you want to show after the decimal point.
+ - `decimalPlace` which defines how many numbers you want to show after the decimal point.
+ - `horizontal` which sets the direction of the handle. The default is `true`. Actually, the direction is set automatically by simply comparing the dimensions of the trough and the handle (which is not that great, I guess). So, you might set it to false to ensure that you'll get a vertical slider.
 
 So basically, the slider will be a range by nature.
 Here is, how it could be with options :
