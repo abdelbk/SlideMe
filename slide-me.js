@@ -25,7 +25,8 @@ SlideMe = (function() {
 				max : 10
 			},
 			horizontal : true,
-			decimalPlace : 0
+			decimalPlace : 0,
+			keyhandler : true
 		};
 
 	function SlideMe(slider, options) {
@@ -36,19 +37,21 @@ SlideMe = (function() {
 		this.getHandleDirection();
 		this.setHandlePosition(this.config.values.value);
 		this.addMouseHandlers();
+		if(this.config.keyhandler) this.addKeyboardHandler();
 	}
 
 	SlideMe.prototype.addMouseHandlers = function() {
 		var me = this;
 		me.handle.addEventListener('mousedown', function(e) {
 			e.preventDefault();
+			me.enable();
 			me.dragging = true;
 			me.position = e[me.units.coord] - me.handle[me.units.offsetPos];
 		}, false);
 
 		document.addEventListener('mousemove', function(e) {
 			e.preventDefault();
-			if(me.dragging === true) {
+			if(me.dragging === true && me.isActive()) {
 				me.changeHandlePosition(e);
 			}
 		}, false);
@@ -59,23 +62,67 @@ SlideMe = (function() {
 		}, false);
 	}
 
+	// right 39, left: 37, up: 38, down: 40
+	SlideMe.prototype.addKeyboardHandler = function() {
+		var me = this;
+		document.addEventListener('keydown', function(e) {
+			if(me.isActive()) {
+				var code = e.charCode || e.keyCode;
+				if(code == me.units.keyNext) {
+					if(me.currentValue >= me.config.values.min && me.currentValue <= me.config.values.max) {
+						me.currentValue += Math.pow(10, me.config.decimalPlace);
+					}
+				} else if(code == me.units.keyPrev) {
+					if(me.currentValue >= me.config.values.min && me.currentValue <= me.config.values.max) {
+						me.currentValue -= Math.pow(10, me.config.decimalPlace);
+					}
+				}
+				if(me.currentValue < me.config.values.min) me.currentValue = me.config.values.min;
+				if(me.currentValue > me.config.values.max) me.currentValue = me.config.values.max;
+				me.setHandlePosition(me.currentValue);
+			}
+		}, false);
+	}
+
 	SlideMe.prototype.getHandleDirection = function() {
 		if(this.config.horizontal || this.handle.offsetWidth < this.slider.offsetWidth) {
 			this.units = {
 				coord : 'clientX',
 				offsetPos : 'offsetLeft',
 				offsetDim : 'offsetWidth',
-				offsetStyle : 'left'
+				offsetStyle : 'left',
+				keyNext : 39,
+				keyPrev : 37,
 			}
 		} else {
 			this.units = {
 				coord : 'clientY',
 				offsetPos : 'offsetTop',
 				offsetDim : 'offsetHeight',
-				offsetStyle : 'top'
+				offsetStyle : 'top',
+				keyNext : 40,
+				keyPrev : 38
 			}
 		}
 
+	}
+
+	SlideMe.prototype.isActive = function() {
+		return this.handle.className.indexOf('slideme-active') > -1 ? true : false;
+	}
+
+	SlideMe.prototype.enable = function() {
+		var handles = document.getElementsByClassName('slideme-active');
+
+		if(this.handle.className.indexOf('slideme-active') == -1) {
+			if(handles.length > 0) {
+				for(var i = 0; i < handles.length; i++) {
+					var cls = handles[i].className.replace(' slideme-active', '');
+					handles[i].className = cls;
+				}
+			}
+			this.handle.className += ' slideme-active';
+		}
 	}
 
 	SlideMe.prototype.changeHandlePosition = function(e) {
