@@ -68,17 +68,11 @@ SlideMe = (function() {
 		document.addEventListener('keydown', function(e) {
 			if(me.isActive()) {
 				var code = e.charCode || e.keyCode;
-				if(code == me.units.keyNext) {
-					if(me.currentValue >= me.config.values.min && me.currentValue <= me.config.values.max) {
-						me.currentValue += Math.pow(10, me.config.decimalPlace);
-					}
-				} else if(code == me.units.keyPrev) {
-					if(me.currentValue >= me.config.values.min && me.currentValue <= me.config.values.max) {
-						me.currentValue -= Math.pow(10, me.config.decimalPlace);
-					}
+				if(code == me.units.keyNext && me.currentValue < me.config.values.max) {
+					me.currentValue += Math.pow(10, me.config.decimalPlace);
+				} else if(code == me.units.keyPrev && me.currentValue > me.config.values.min) {
+					me.currentValue -= Math.pow(10, me.config.decimalPlace);
 				}
-				if(me.currentValue < me.config.values.min) me.currentValue = me.config.values.min;
-				if(me.currentValue > me.config.values.max) me.currentValue = me.config.values.max;
 				me.setHandlePosition(me.currentValue);
 			}
 		}, false);
@@ -117,8 +111,7 @@ SlideMe = (function() {
 		if(this.handle.className.indexOf('slideme-active') == -1) {
 			if(handles.length > 0) {
 				for(var i = 0; i < handles.length; i++) {
-					var cls = handles[i].className.replace(' slideme-active', '');
-					handles[i].className = cls;
+					handles[i].className = handles[i].className.replace(' slideme-active', '');
 				}
 			}
 			this.handle.className += ' slideme-active';
