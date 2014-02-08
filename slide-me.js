@@ -134,12 +134,14 @@ SlideMe = (function() {
 		}
 	}
 
+	SlideMe.prototype.getHandlePosition = function(valule) {
+		var percent     = (value - this.config.values.min) / (this.config.values.max - this.config.values.min);
+		return (this.slider[this.units.offsetDim] - this.handle[this.units.offsetDim]) * percent;
+	}
+
 	SlideMe.prototype.setHandlePosition = function(value) {
-		var percent     = (value - this.config.values.min) / (this.config.values.max - this.config.values.min),
-		    position    = (this.slider[this.units.offsetDim] - this.handle[this.units.offsetDim]) * percent;
-		
+		var position = this.getHandlePosition(value);
 		this.handle.style[this.units.offsetStyle] = position + 'px';	
-		return position;
 	}
 
 	SlideMe.prototype.getHandleValue = function(position, decimalPlace) {
