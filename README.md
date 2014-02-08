@@ -28,7 +28,7 @@ var slider = new SlideMe('elementId', {
 });
 ```
 ####Useful functions
-Most of the time, people will want to get the value at a certain position.This is what the `getCurrentValue` function do:
+Most of the time, people will want to get the value at a certain position.This is what the `getCurrentValue` function does:
 ```javascript
 var value = slider.getCurrentValue();
 ```
