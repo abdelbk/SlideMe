@@ -25,6 +25,7 @@ SlideMe = (function() {
 				max : 10
 			},
 			horizontal : true,
+			invertValues : true,
 			decimalPlace : 0,
 			keyhandler : true
 		};
@@ -33,12 +34,40 @@ SlideMe = (function() {
 		this.config       = Util.extend({}, defaults, options);
 		this.slider       = document.getElementById(slider);
 		this.handle       = this.slider.firstElementChild;
-		this.currentValue = this.config.values.value;
+		this.currentValue = this.config.invertValues ? this.config.values.max - this.config.values.value : this.config.values.value;
 		this.getHandleDirection();
-		this.setHandlePosition(this.config.values.value);
+		this.setHandlePosition(this.currentValue);
 		this.addMouseHandlers();
 		if(this.config.keyhandler) this.addKeyboardHandler();
 	}
+
+
+	SlideMe.prototype.getHandleDirection = function() {
+		if(this.config.horizontal || this.handle.offsetWidth < this.slider.offsetWidth) {
+			this.units = {
+				coord : 'clientX',
+				offsetPos : 'offsetLeft',
+				offsetDim : 'offsetWidth',
+				offsetStyle : 'left',
+				keyNext : 39,
+				keyPrev : 37,
+			}
+		} else {
+			this.units = {
+				coord : 'clientY',
+				offsetPos : 'offsetTop',
+				offsetDim : 'offsetHeight',
+				offsetStyle : 'top',
+				keyNext : 40,
+				keyPrev : 38
+			}
+		}
+
+	}
+
+	SlideMe.prototype.getCurrentValue = function() {
+		return (this.config.invertValues) ? this.config.values.max - this.currentValue : this.currentValue; 
+	} 
 
 	SlideMe.prototype.addMouseHandlers = function() {
 		var me = this;
@@ -78,29 +107,6 @@ SlideMe = (function() {
 		}, false);
 	}
 
-	SlideMe.prototype.getHandleDirection = function() {
-		if(this.config.horizontal || this.handle.offsetWidth < this.slider.offsetWidth) {
-			this.units = {
-				coord : 'clientX',
-				offsetPos : 'offsetLeft',
-				offsetDim : 'offsetWidth',
-				offsetStyle : 'left',
-				keyNext : 39,
-				keyPrev : 37,
-			}
-		} else {
-			this.units = {
-				coord : 'clientY',
-				offsetPos : 'offsetTop',
-				offsetDim : 'offsetHeight',
-				offsetStyle : 'top',
-				keyNext : 40,
-				keyPrev : 38
-			}
-		}
-
-	}
-
 	SlideMe.prototype.isActive = function() {
 		return this.handle.className.indexOf('slideme-active') > -1 ? true : false;
 	}
@@ -111,7 +117,7 @@ SlideMe = (function() {
 		if(this.handle.className.indexOf('slideme-active') == -1) {
 			if(handles.length > 0) {
 				for(var i = 0; i < handles.length; i++) {
-					handles[i].className = handles[i].className.replace(' slideme-active', '');
+					handles[i].className = handles[i].className.replace(' slideme-active', '');;
 				}
 			}
 			this.handle.className += ' slideme-active';
