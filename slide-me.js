@@ -134,7 +134,7 @@ SlideMe = (function() {
 		}
 	}
 
-	SlideMe.prototype.getHandlePosition = function(valule) {
+	SlideMe.prototype.getHandlePosition = function(value) {
 		var percent = (value - this.config.values.min) / (this.config.values.max - this.config.values.min);
 		return (this.slider[this.units.offsetDim] - this.handle[this.units.offsetDim]) * percent;
 	}
