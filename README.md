@@ -14,6 +14,7 @@ The options are the following :
  - `horizontal` which sets the direction of the handle. The default is `true`. Actually, the direction is set automatically by simply comparing the dimensions of the trough and the handle (which is not that great, I guess). So, you might set it to false to ensure that you'll get a vertical slider.
  - `invertValues` was added mainly because it's somehow a common sense to start from the bottom of a vertical slider.The default value is `false`.
  - `keyhandler` enables sliding using the keyboard arrows. The default is `true`.
+ - `range` enables a range. Another handle will be created. the default is `false`
 
 Basically, the slider will be a range by nature.
 Here is, how it could be with options :

@@ -27,7 +27,7 @@ SlideMe = (function() {
             horizontal : true,
             invertValues : false,
             decimalPlace : 0,
-            range : true,
+            range : false,
             keyhandler : true,
             callbacks : {
                 mousemove : function() {},
