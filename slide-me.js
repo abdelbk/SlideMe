@@ -19,21 +19,21 @@ Util = (function() {
 
 SlideMe = (function() {
     var defaults = {
-            values : {
-                value : 0,
-                min : 0,
-                max : 10
-            },
-            horizontal : true,
-            invertValues : false,
-            decimalPlace : 0,
-            range : false,
-            keyhandler : true,
-            callbacks : {
-                mousemove : function() {},
-                mouseup : function() {}
-            }
-        };
+        values : {
+            value : 0,
+            min : 0,
+            max : 10
+        },
+        horizontal : true,
+        invertValues : false,
+        decimalPlace : 0,
+        range : false,
+        keyhandler : true,
+        callbacks : {
+            mousemove : function() {},
+            mouseup : function() {}
+        }
+    };
 
     function SlideMe(slider, options) {
         this.config = Util.extend({}, defaults, options);
